@@ -3,12 +3,10 @@ import numpy as np
 EPSILON = 1e-10
 
 
-def convergence_reached(S):
+def sum_bidiagonal_sup(S):
     """ PARAMS : S une matrice bidiagonale
-        RETURN : 1 si la convergence est atteinte, 0 sinon
-        Verifie la convergence de l'algorithme bidiagonal_to_diagonal
-        Cela revient a regarder si la somme des carres de la diagonale sup
-        est inferieure a EPSILON choisi arbitrairement"""
+        RETURN : La somme des carres de la diagonale sup
+    Cette fonction est utilisee pour montrer la convergence de l'algorithme."""
     (n, m) = np.shape(S)
     r = min(n, m)
     
@@ -16,7 +14,40 @@ def convergence_reached(S):
     for i in range(r-1):
         s += np.square(S[i,i+1])
 
-    return s < EPSILON
+    return s
+
+
+def is_diagonal(S):
+    """ PARAMS : S une matrice bidiagonale
+        RETURN : True si la convergence est atteinte (ie. la matrice est diagonale)
+                 False sinon
+    Verifie la convergence de l'algorithme bidiagonal_to_diagonal
+    Cela revient a regarder si la somme des carres de la diagonale sup
+    est inferieure a EPSILON choisi arbitrairement"""
+    return sum_bidiagonal_sup(S) < EPSILON
+
+
+def compare_bidiagonal(A, B):
+    """ PARAMS : A et B deux matrices bidiagonales avec des termes extrabidiagonaux
+                 possiblements non nuls mais tres proches de 0 qu'on neglige
+        RETURN : True si A = B
+                 (a EPSILON pret et en negligeant les termes proches de 0)
+                 False sinon
+        Cette fonction sert a verifier la veracite de l'invariant U x S x V = BD """
+    (n, m) = np.shape(A)
+    (n2, m2) = np.shape(B)
+
+    if (n != n2 or m != m2):
+        return False
+
+    r = min(n, m)
+
+    for i in range(r - 1):       
+        if (abs(A[i, i] - B[i, i]) >= EPSILON or
+            abs(A[i, i+1] - B[i, i+1]) >= EPSILON):
+            return False
+
+    return True
 
 
 def bidiagonal_to_diagonal(S):
@@ -27,35 +58,16 @@ def bidiagonal_to_diagonal(S):
     U = np.matrix(np.eye(n, n))
     V = np.matrix(np.eye(m, m))
 
-    while (not(convergence_reached(S))):
+    while (not(is_diagonal(S))):
         (Q1, R1) = np.linalg.qr(np.transpose(S))
         (Q2, R2) = np.linalg.qr(np.transpose(R1))
         S = R2
         U = U * Q2
         V = np.transpose(Q1) * V
+        ite += 1
 
     return (U, S, V)
 
-
-def test_bidiagonal_to_diagonal():
-    S_bidiag = np.matrix([[2, 4, 0, 0],
-                   [0, 1, 3, 0],
-                   [0, 0, 5, 2],
-                   [0, 0, 0, 1],
-                   [0, 0, 0, 0],
-                   [0, 0, 0, 0]])
-
-    (U, S_diag, V) = bidiagonal_to_diagonal(S_bidiag)
-
-    print S_bidiag
-    print S_diag
-
-    print U * S_diag * V
-
-    if (np.array_equal(U * S_diag * V, S_bidiag)):
-        print("U x S x V = BD est verifie")
-    else:
-        print("U x S x V = BD n'est pas verifie")
     
         
     
