@@ -3,12 +3,11 @@
 
 from image import *
 
-#img=[[ [0,1,0],[1,1,0],[1,0,1] ],
-#     [ [0,0,0],[0,0,1],[0,1,1] ]]
 
 #img_full=mp.image.imread("img/psy.png")           #       89*66
-img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
+#img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
 #img_full=mp.image.imread("img/couleurs2.png")     #      230*219
+#img_full=mp.image.imread("img/grey.png")          #      260*322
 #img_full=mp.image.imread("img/peint.png")         #      442*262
 #img_full=mp.image.imread("img/img_takeoff.png")   #      400*300
 #img_full=mp.image.imread("img/earth.png")         #      500*500
@@ -23,11 +22,13 @@ img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
 
 (n,p,q)=np.shape(img_full)
 m=min(n,p)
-pas=m/20
+pas=1
 a=[]#liste des images successives
-for k in range(pas,m+pas,pas):
+for k in range(pas,50,pas):
     a.append(compression_k(img_full,k))
+
 nn=len(a)
+
 a1=np.copy(a)
 a2=np.copy(a)
 a3=np.copy(a)
@@ -55,7 +56,6 @@ for k in range(nn):
     plt.title("AVEC 3")
     plt.imshow(a3[k],interpolation='nearest')
     plt.show()
-
 
 
 
