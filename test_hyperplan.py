@@ -3,25 +3,25 @@
 from hyperplan import *
 import time
 
-def print_test(boolean,msg):
+def print_test(boolean,msg):#affiche le résultat du test
     if(boolean):
         print("OK"+" : "+msg+"\n")
     else:
         print("ERROR"+" : "+msg+"\n")
 
-def eg_matrix(A,B,epsilon):
-    (n,m)=np.shape(A)
+def eg_matrix(A,B,epsilon):#egalité sur les matrices, élmt par élmt
+    (n,m)=np.shape(A)      #avec une erreur max de epsilon
     if((n,m)!=np.shape(B)):
         return False
     else:
         return (np.linalg.norm([[A[i,j]-B[i,j] for j in range(m)] for i in range(n)])<epsilon)
 
-def definition(taille_max,valeur_borne,norme_max):
+def definition(taille_max,valeur_borne,norme_max):#definie les vecteurs usuelles pour tous les test_2
     n=np.random.randint(2,taille_max+1)
     valeur=np.random.randint(1,valeur_borne+1)
     norme=np.random.randint(1,norme_max+1)
     cond=True
-    while(cond):#simule une boucle do-while pour avoir x et y != 0
+    while(cond):#simule une boucle do-while pour avoir |x| et |y| != 0
         x=np.matrix(np.random.randint(-valeur,valeur,size=(n,1)))
         y=np.matrix(np.random.randint(-valeur,valeur,size=(n,1)))
         if(np.linalg.norm(x)*np.linalg.norm(y)>epsilon):
@@ -30,7 +30,7 @@ def definition(taille_max,valeur_borne,norme_max):
     y=y*(norme/np.linalg.norm(y))        
     u=u_householder(x,y)# |x|=|y|
     H=np.matrix(np.eye(n)-2*u*u.T)
-    return (x,y,u,H,n,valeur,norme)
+    return (x,y,u,H,n,valeur,norme)#tester dans test_u_householder_2
 
 #############################################
 
@@ -47,7 +47,7 @@ def test_u_householder_1(epsilon):
     print_test(eg_matrix(y,H*x,epsilon),"H projette bien x sur y")
     print_test(eg_matrix(x,H*y,epsilon),"H projette bien y sur x")
 
-def test_u_householder_2(nb_test,epsilon):
+def test_u_householder_2(nb_test,epsilon):#test aussi definition
     taille_max=50
     valeur_borne=100
     norme_max=1000
@@ -205,9 +205,9 @@ def test_mult_mat_householder_D_2(nb_test,epsilon):
     print_test(j==nb_test,"multiplication de matrices quelconques par une matrice de Householder")
 
 def est_bidiag(M,Qleft,B,Qright,epsilon):
-    (n,p)=np.shape(M)#on verifie Qleft*B*Qright=M, B bidiagonale et Qleft et Qright orthogonale
-    m=Qleft*B*Qright
-    l=Qleft*Qleft.T
+    (n,p)=np.shape(M)
+    m=Qleft*B*Qright #on verifie Qleft*B*Qright=M, B bidiagonale
+    l=Qleft*Qleft.T  #Qleft et Qright orthogonales
     r=Qright*Qright.T
     return      (eg_matrix(M,m,epsilon)\
             and (eg_matrix(np.matrix([[0 if(i==j or j==i+1) else B[i,j] for j in range(p)] for i in range(n)]),np.matrix(np.zeros((n,p))),epsilon))\
@@ -261,7 +261,7 @@ def test(nb_test,epsilon):
     test_mult_mat_householder_D_2(nb_test,epsilon)
     test_bidiagonale_1(epsilon)
     test_bidiagonale_2(100,epsilon)
-
+    
 nb_test=100
 epsilon=10**(-10)
 d=time.clock()
@@ -273,58 +273,3 @@ print("Temps d'exécution des tests : "+str(int(f-d))+" sec.")
 #  1000 ->  env.    42"
 #   500 ->  env.    24"
 #   100 ->  env.    11"
-
-
-###############################################################################
-
-def extract_colors(img_full):#un array de dim n*p et avec q=3 composantes, RGB(*)
-    (n,p,q)=np.shape(img_full)
-    if(q!=3):
-        q=3
-    return [[[img_full[i][j][k] for j in range(p)] for i in range(n)] for k in range(q)]
-
-
-def one_color(img_full):#idem(*) + conserve les composantes nulles pour l'affichage via plt.imshow
-    (n,p,q)=np.shape(img_full)
-    if(q!=3):
-        q=3
-    return [[[[0 for u in range(k)]+[img_full[i][j][k]]+[0 for v in range(k+1,3)] for j in range(p)] for i in range(n)] for k in range(q)]
-
-# /!\ les types de retour de ces 2 fonctions sont bâtards :
-# /!\ liste de liste de liste, donc à récupérer dans 3 NP.MATRIX différents
-
-
-
-
-### donne un array
-#img_full=mp.image.imread("img_takeoff.png") #width=400*300=height
-#img_full=mp.image.imread("peint.png")       #      442*262
-#img_full=mp.image.imread("couleurs.png")    #      664*634
-#img_full=mp.image.imread("couleurs2.png")   #      230*219
-#img_full=mp.image.imread("earth.png")       #      500*500
-
-
-#img_extract_rgb=extract_colors(img_full)
-#img_extract_rgb=one_color(img_full)
-#print(np.matrix(img_extract_rgb))
-
-
-#plt.subplot(221)
-#plt.axis("off")
-#plt.title("NORMAL")
-#plt.imshow(img_full)
-#plt.subplot(222)
-#plt.axis("off")
-#plt.title("RED")
-#plt.imshow(img_extract_rgb[0])
-#plt.subplot(223)
-#plt.axis("off")
-#plt.title("GREEN")
-#plt.imshow(img_extract_rgb[1])
-#plt.subplot(224)
-#plt.axis("off")
-#plt.title("BLUE")
-#plt.imshow(img_extract_rgb[2])
-
-#plt.show()
-
