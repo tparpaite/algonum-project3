@@ -1,10 +1,7 @@
 #!/usr/bin/python2.7
 # coding: utf-8
 
-import numpy as np
-import matplotlib as mp
-import matplotlib.pyplot as plt
-from hyperplan import *
+from bidiag import *
 
 #img_full obtenue avec mp.image.imread("img/batman.png") par ex.
 #img_full est un array de 3 matrix taille n*p
@@ -21,7 +18,6 @@ def one_color(img_full):#idem(*) + conserve les composantes nulles pour l'affich
         q=3#on enlève la transparence
     return [[[[0 for u in range(k)]+[img_full[i][j][k]]+[0 for v in range(k+1,3)] for j in range(p)] for i in range(n)] for k in range(q)]
 # /!\ les types de retour de cette fonction est bâtard :
-
 
 
 #img une image sous la forme d'un array n*p*3ou4
@@ -45,7 +41,6 @@ def compression_k(img,k):
                 B[i][j][q]=A[q][i,j]
     print(k)
     return B
-
 
 #Pour améliorer les img en couleurs compressées
 def travail1(a):#moyenne sur les 4 voisins
@@ -96,4 +91,3 @@ def travail4(a):#pas top
                     a[i,j,k]=(moyenne+a[i,j,k])/2.0
                     c=c+1
     print(" "*30+str(c))
-

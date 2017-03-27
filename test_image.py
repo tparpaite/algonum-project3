@@ -10,7 +10,7 @@ from image import *
 #img_full=mp.image.imread("img/grey.png")          #      260*322
 #img_full=mp.image.imread("img/peint.png")         #      442*262
 #img_full=mp.image.imread("img/img_takeoff.png")   #      400*300
-#img_full=mp.image.imread("img/earth.png")         #      500*500
+img_full=mp.image.imread("img/earth.png")         #      500*500
 #img_full=mp.image.imread("img/lena.png")          #      512*512
 #img_full=mp.image.imread("img/couleurs.png")      #      664*634
 #img_full=mp.image.imread("img/beatles_summer.png")#     1000*491
@@ -22,13 +22,13 @@ from image import *
 
 (n,p,q)=np.shape(img_full)
 m=min(n,p)
-pas=1
+pas=10
 a=[]#liste des images successives
-for k in range(pas,50,pas):
+for k in range(pas,150,pas):
     a.append(compression_k(img_full,k))
 
 nn=len(a)
-
+"""
 a1=np.copy(a)
 a2=np.copy(a)
 a3=np.copy(a)
@@ -36,26 +36,42 @@ for k in range(nn):
     travail1(a1[k])
     travail2(a2[k])
     travail3(a3[k])
+"""
+def sub(a,b):
+    return np.abs(a-b)
 
+def gris(a):
+    (n,p,q)=np.shape(a)
+    r=np.sqrt(3.0)
+    return [[[np.linalg.norm(a[i][j])/r,np.linalg.norm(a[i][j])/r,np.linalg.norm(a[i][j])/r]  for j in range(p)] for i in range(n)]
+    
 for k in range(nn):
     print(k+1)
-    plt.subplot(221)
+    plt.subplot(121)
     plt.axis("off")
     plt.title("SANS")
     plt.imshow(a[k],interpolation='nearest')
-    plt.subplot(222)
+    plt.subplot(122)
+    plt.axis("off")
+    plt.title("SANS")
+    plt.imshow(gris(a[k]),interpolation='nearest')
+    plt.show()
+"""    plt.subplot(222)
     plt.axis("off")
     plt.title("AVEC 1")
-    plt.imshow(a1[k],interpolation='nearest')
+    plt.imshow(sub(a1[k],img_full),interpolation='nearest')
     plt.subplot(223)
     plt.axis("off")
     plt.title("AVEC 2")
-    plt.imshow(a2[k],interpolation='nearest')
+    plt.imshow(sub(a2[k],img_full),interpolation='nearest')
     plt.subplot(224)
     plt.axis("off")
     plt.title("AVEC 3")
-    plt.imshow(a3[k],interpolation='nearest')
+    plt.imshow(sub(a3[k],img_full),interpolation='nearest')
     plt.show()
+"""
+
+
 
 
 
@@ -77,16 +93,7 @@ for k in range(nn):
 
 
 
-
-
-
-
-
-
-
-
-
-
+#décompose une image en 3 IMAGES : R, G, B
 
 #img_extract_rgb=extract_colors(img_full)
 #img_extract_rgb=one_color(img_full)
