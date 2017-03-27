@@ -1,16 +1,17 @@
 #!/usr/bin/python2.7
 # coding: utf-8
-
+import matplotlib as mp
+import matplotlib.pyplot as plt
 from image import *
 
 
 #img_full=mp.image.imread("img/psy.png")           #       89*66
-#img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
+img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
 #img_full=mp.image.imread("img/couleurs2.png")     #      230*219
 #img_full=mp.image.imread("img/grey.png")          #      260*322
 #img_full=mp.image.imread("img/peint.png")         #      442*262
 #img_full=mp.image.imread("img/img_takeoff.png")   #      400*300
-img_full=mp.image.imread("img/earth.png")         #      500*500
+#img_full=mp.image.imread("img/earth.png")         #      500*500
 #img_full=mp.image.imread("img/lena.png")          #      512*512
 #img_full=mp.image.imread("img/couleurs.png")      #      664*634
 #img_full=mp.image.imread("img/beatles_summer.png")#     1000*491
@@ -22,9 +23,9 @@ img_full=mp.image.imread("img/earth.png")         #      500*500
 
 (n,p,q)=np.shape(img_full)
 m=min(n,p)
-pas=10
+pas=m/20
 a=[]#liste des images successives
-for k in range(pas,150,pas):
+for k in range(pas,m+pas,pas):
     a.append(compression_k(img_full,k))
 
 nn=len(a)

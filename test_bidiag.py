@@ -58,7 +58,7 @@ def test(nb_test,epsilon):
     return (f-d)
     
 nb_test=100
-taille_max=250
+taille_max=50
 epsilon=10**(-10)
 t=test(nb_test,epsilon)
 print("Temps d'exécution des tests : "+str(int(10*t)/10.)+" sec.")
