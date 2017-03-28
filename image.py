@@ -17,16 +17,21 @@ def one_color(img_full):#idem(*) + conserve les composantes nulles pour l'affich
     if(q!=3):
         q=3#on enlève la transparence
     return [[[[0 for u in range(k)]+[img_full[i][j][k]]+[0 for v in range(k+1,3)] for j in range(p)] for i in range(n)] for k in range(q)]
-# /!\ les types de retour de cette fonction est bâtard :
+# /!\ les types de retour de cette fonction est bâtard
+
+
+
 
 
 #img une image sous la forme d'un array n*p*3ou4
-def compression_k(img,k):
+def compression_k(img, k):#R,G,B):#, A): #A=np.linalg.svd
     (n,p,Q)=np.shape(img)
     m=min(n,p)
     Q=3
+    #print "Shape : ", A[0]
     A=extract_colors(img)#pour décomposer en usv sur des matrices n*p
     A=[np.linalg.svd(np.matrix(A[q])) for q in range(Q)]
+    #A=[R,G,B]
     for q in range(Q):
         A[q][1][k:]=0#compression au rang k
     for q in range(Q):

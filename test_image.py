@@ -4,7 +4,6 @@ import matplotlib as mp
 import matplotlib.pyplot as plt
 from image import *
 
-
 #img_full=mp.image.imread("img/psy.png")           #       89*66
 img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
 #img_full=mp.image.imread("img/couleurs2.png")     #      230*219
@@ -23,15 +22,14 @@ img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
 
 (n,p,q)=np.shape(img_full)
 m=min(n,p)
-pas=m/20
-a=[]#liste des images successives
-for k in range(1,m/pas/3):
-    a.append(compression_k(img_full,k*pas))
+pas=20
+#a=[]#liste des images successives
+#for k in range(1,6):
+#    a.append(compression_k(img_full,k*pas))
 
 
-def sub(a,b):
-    return np.abs(a-b)
 
+"""
 def gris_1(a):
     r=np.sqrt(a[0]**2+a[1]**2+a[2]**2)/1.9
     return [r,r,r]
@@ -100,17 +98,15 @@ def travail5(a):#tres bon sur takeoff  BEST
     coeff=0.05
     for i in range(0,n):
         for j in range(0,p):
-            s=np.mean(a[i,j])
-            if(s<0.1):
-                for k in range(q):
-                    a[i,j,k]=np.abs(s)/3.0
+            for k in range(q):
+                if(a[i,j,k]<0):
+                    a[i,j,k]=a[i,j,k]%1
                     c=c+1
-            if(s>0.9):
-                for k in range(q):
-                    a[i,j,k]=1
+                if(a[i,j,k]>1):
+                    a[i,j,k]=a[i,j,k]%1
                     c=c+1
     print(" "*40+str(c))
-
+"""
 def travail6(a):#tres bon sur takeoff  BEST
     (n,p,q)=np.shape(a)
     q=3
@@ -118,7 +114,6 @@ def travail6(a):#tres bon sur takeoff  BEST
     coeff=0.05
     for i in range(0,n):
         for j in range(0,p):
-            s=np.mean(a[i,j])
             for k in range(q):
                 if(a[i,j,k]<0):
                     a[i,j,k]=0
@@ -130,36 +125,60 @@ def travail6(a):#tres bon sur takeoff  BEST
 
 
 
-nn=len(a)
+#nn=len(a)
 
-a1=np.copy(a)
-a2=np.copy(a)
-a3=np.copy(a)
-for k in range(nn):
-    travail5(a1[k])
-    travail4(a2[k])
-    travail6(a3[k])
+#a1=np.copy(a)
+#a2=np.copy(a)
+#a3=np.copy(a)
+#for k in range(nn):
+    #travail5(a1[k])
+    #travail4(a2[k])
+    #travail6(a3[k])
 
 
-for k in range(nn):
-    print(k+1)
-    plt.subplot(221)
-    plt.axis("off")
-    plt.title("SANS")
-    plt.imshow(a[k],interpolation='nearest')
-    plt.subplot(222)
-    plt.axis("off")
-    plt.title("SANS")
-    plt.imshow(a1[k],interpolation='nearest')
-    plt.subplot(223)
-    plt.axis("off")
-    plt.title("AVEC 1")
-    plt.imshow(a2[k],interpolation='nearest')
-    plt.subplot(224)
-    plt.axis("off")
-    plt.title("AVEC 2")
-    plt.imshow(a3[k],interpolation='nearest')
-    plt.show()
+def sub(a,b):
+    return np.abs(a-b)
+
+def distance_matrice(a,b):
+    (n,p,q)=np.shape(a)
+    s=sub(a,b)
+    return np.linalg.norm([[np.linalg.norm(s[i,j]) for j in range(p)] for i in range(n)])
+
+
+#print img_full[:][:][0]
+#A=extract_colors(img_full)#pour décomposer en usv sur des matrices n*p
+#A=[np.linalg.svd(np.matrix(A[k])) for k in range(q)]
+max=(n*p)/(1+n+p)
+x=range(1,m,1)
+distance=[]
+for g in x:
+     a=compression_k(img_full,g)# A#[0],A[1],A[2])
+     travail6(a)
+     d=distance_matrice(img_full,a)
+     distance.append(d)
+plt.plot(x,distance)
+plt.show()
+
+#for k in range(nn):
+#    print(k+1)
+#    plt.subplot(121)
+#    plt.axis("off")
+#    plt.title("BRUTE")
+#    plt.imshow(a[k],interpolation='nearest')
+#    plt.subplot(122)
+#    plt.axis("off")
+#    plt.title("AVEC CORRECTION")
+#    plt.imshow(a3[k],interpolation='nearest')
+#    plt.show()
+    #plt.subplot(223)
+    #plt.axis("off")
+    #plt.title("AVEC 1")
+    #plt.imshow(a2[k],interpolation='nearest')
+    #plt.subplot(224)
+    #plt.axis("off")
+    #plt.title("AVEC 2")
+    #plt.imshow(a3[k],interpolation='nearest')
+    #plt.show()
     #plt.subplot(224)
     #plt.axis("off")
     #plt.title("AVEC 3")
