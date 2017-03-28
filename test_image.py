@@ -25,52 +25,147 @@ img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
 m=min(n,p)
 pas=m/20
 a=[]#liste des images successives
-for k in range(pas,m+pas,pas):
-    a.append(compression_k(img_full,k))
+for k in range(1,m/pas/3):
+    a.append(compression_k(img_full,k*pas))
+
+
+def sub(a,b):
+    return np.abs(a-b)
+
+def gris_1(a):
+    r=np.sqrt(a[0]**2+a[1]**2+a[2]**2)/1.9
+    return [r,r,r]
+
+def gris_2(a):
+    r=np.abs((a[0]+a[1]+a[2])/3.1)
+    return [r,r,r]
+
+def traitement(a):
+    (n,p,q)=np.shape(a)
+    return [[gris_1(a[i][j])  for j in range(p)] for i in range(n)]
+
+#Pour améliorer les img en couleurs compressées
+def travail1(a):#moyenne sur les 4 voisins
+    (n,p,q)=np.shape(a)
+    q=3
+    c=0
+    for i in range(1,n-1):
+        for j in range(1,p-1):
+            for k in range(q):
+                a[i,j,k]=(a[i+1,j,k]+a[i-1,j,k]+a[i,j+1,k]+a[i,j-1,k])/4.0
+                c=c+1
+    print(c)
+
+def travail2(a):#moyenne les 8 voisins, uniformément
+    (n,p,q)=np.shape(a)
+    q=3
+    c=0
+    for i in range(1,n-1):
+        for j in range(1,p-1):
+            for k in range(q):
+                moyenne=(a[i+1,j,k]+a[i-1,j,k]+a[i,j+1,k]+a[i,j-1,k])/4.0
+                a[i,j,k]=(4*moyenne+a[i+1,j+1,k]+a[i+1,j-1,k]+a[i-1,j+1,k]+a[i-1,j-1,k])/8.0
+                c=c+1
+    print(" "*10+str(c))
+
+def travail3(a):#rajoute un coeff sqrt(2) pour prendre en compte les 8 voisins
+    (n,p,q)=np.shape(a)
+    q=3
+    c=0
+    for i in range(1,n-1):
+        for j in range(1,p-1):
+            for k in range(q):
+                moyenne=(a[i+1,j,k]+a[i-1,j,k]+a[i,j+1,k]+a[i,j-1,k])/4.0
+                a[i,j,k]=(5.656854*moyenne+a[i+1,j+1,k]+a[i+1,j-1,k]+a[i-1,j+1,k]+a[i-1,j-1,k])/9.656854
+                c=c+1
+    print(" "*20+str(c))
+    
+def travail4(a):
+    (n,p,q)=np.shape(a)
+    q=3
+    c=0
+    coeff=0.1
+    for i in range(1,n-1):
+        for j in range(1,p-1):
+            for k in range(q):
+                t=np.abs(np.linalg.norm(a[i,j])-np.linalg.norm([a[i+1,j],a[i-1,j],a[i,j+1],a[i,j-1]]))
+                a[i,j,k]=(a[i+1,j,k]+a[i-1,j,k]+a[i,j+1,k]+a[i,j-1,k])/4.0
+                c=c+1
+    print(" "*30+str(c))
+
+def travail5(a):#tres bon sur takeoff  BEST
+    (n,p,q)=np.shape(a)
+    q=3
+    c=0
+    coeff=0.05
+    for i in range(0,n):
+        for j in range(0,p):
+            s=np.mean(a[i,j])
+            if(s<0.1):
+                for k in range(q):
+                    a[i,j,k]=np.abs(s)/3.0
+                    c=c+1
+            if(s>0.9):
+                for k in range(q):
+                    a[i,j,k]=1
+                    c=c+1
+    print(" "*40+str(c))
+
+def travail6(a):#tres bon sur takeoff  BEST
+    (n,p,q)=np.shape(a)
+    q=3
+    c=0
+    coeff=0.05
+    for i in range(0,n):
+        for j in range(0,p):
+            s=np.mean(a[i,j])
+            for k in range(q):
+                if(a[i,j,k]<0):
+                    a[i,j,k]=0
+                    c=c+1
+                if(a[i,j,k]>1):
+                    a[i,j,k]=1
+                    c=c+1
+    print(" "*50+str(c))
+
+
 
 nn=len(a)
-"""
+
 a1=np.copy(a)
 a2=np.copy(a)
 a3=np.copy(a)
 for k in range(nn):
-    travail1(a1[k])
-    travail2(a2[k])
-    travail3(a3[k])
-"""
-def sub(a,b):
-    return np.abs(a-b)
+    travail5(a1[k])
+    travail4(a2[k])
+    travail6(a3[k])
 
-def gris(a):
-    (n,p,q)=np.shape(a)
-    r=np.sqrt(3.0)
-    return [[[np.linalg.norm(a[i][j])/r,np.linalg.norm(a[i][j])/r,np.linalg.norm(a[i][j])/r]  for j in range(p)] for i in range(n)]
-    
+
 for k in range(nn):
     print(k+1)
-    plt.subplot(121)
+    plt.subplot(221)
     plt.axis("off")
     plt.title("SANS")
     plt.imshow(a[k],interpolation='nearest')
-    plt.subplot(122)
+    plt.subplot(222)
     plt.axis("off")
     plt.title("SANS")
-    plt.imshow(gris(a[k]),interpolation='nearest')
-    plt.show()
-"""    plt.subplot(222)
-    plt.axis("off")
-    plt.title("AVEC 1")
-    plt.imshow(sub(a1[k],img_full),interpolation='nearest')
+    plt.imshow(a1[k],interpolation='nearest')
     plt.subplot(223)
     plt.axis("off")
-    plt.title("AVEC 2")
-    plt.imshow(sub(a2[k],img_full),interpolation='nearest')
+    plt.title("AVEC 1")
+    plt.imshow(a2[k],interpolation='nearest')
     plt.subplot(224)
     plt.axis("off")
-    plt.title("AVEC 3")
-    plt.imshow(sub(a3[k],img_full),interpolation='nearest')
+    plt.title("AVEC 2")
+    plt.imshow(a3[k],interpolation='nearest')
     plt.show()
-"""
+    #plt.subplot(224)
+    #plt.axis("off")
+    #plt.title("AVEC 3")
+    #plt.imshow((a3[k]),interpolation='nearest')
+    #plt.show()
+
 
 
 
