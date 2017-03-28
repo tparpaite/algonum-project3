@@ -149,14 +149,31 @@ def distance_matrice(a,b):
 #A=extract_colors(img_full)#pour décomposer en usv sur des matrices n*p
 #A=[np.linalg.svd(np.matrix(A[k])) for k in range(q)]
 max=(n*p)/(1+n+p)
-x=range(1,m,1)
+if(max>100):
+    x=[]
+    for i in range(1,max/10,2):
+        x.append(i)
+    for i in range(max/10+2,max/5,5):
+        x.append(i)
+    for i in range(max/5+5,max,20):
+        x.append(i)
+else:
+    x=range(1,max,1)
+print(x)
+print(len(x))
 distance=[]
 for g in x:
      a=compression_k(img_full,g)# A#[0],A[1],A[2])
      travail6(a)
      d=distance_matrice(img_full,a)
      distance.append(d)
-plt.plot(x,distance)
+y=[np.sqrt(1/float(i)) for i in x]
+z=[np.sqrt(np.sqrt(1/float(i))) for i in x]
+plt.plot(x,distance,'o')
+plt.show()
+plt.plot(y,distance,'o')
+plt.show()
+plt.plot(z,distance,'o')
 plt.show()
 
 #for k in range(nn):

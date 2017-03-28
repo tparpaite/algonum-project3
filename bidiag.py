@@ -22,18 +22,14 @@ def mat_bidiagonale(A):
         Qa2[i,0]=np.linalg.norm(Qa1)
         Q1=u_householder(Qa1,Qa2)#Qa1 et Qa2 sont de même norme
         Qleft=mult_mat_householder_D(Qleft,Q1)
-        B=mult_mat_householder_G(Q1,B)
-        #for j in range(i+1,n):
-        #    B[j,i]=0
+        B=mult_mat_householder_G(Q1,B)#On projette la colonne sur l'element diagonal
         if(i<(m-2)):
             Qb1=np.matrix(np.zeros((m,1)))#colonne
             Qb1[i:m,0]=B[i,i:m].T
             Qb2=np.matrix(np.zeros((m,1)))#colonne
             Qb2[i,0]=B[i,i]
             Qb2[i+1,0]=np.linalg.norm(B[i,(i+1):m])
-            Q2=u_householder(Qb1,Qb2)#Qa1 et Qa2 sont de même norme
+            Q2=u_householder(Qb1,Qb2)#Qb1 et Qb2 sont de même norme
             Qright=mult_mat_householder_G(Q2,Qright)
-            B=mult_mat_householder_D(B,Q2)
-            #for j in range(i+2,m):
-            #    B[i,j]=0
+            B=mult_mat_householder_D(B,Q2)#on projette la ligne sur l'élément
     return (Qleft,B,Qright)
