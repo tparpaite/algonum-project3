@@ -7,11 +7,11 @@ from bidiag import *
 #img_full est un array de 3 matrix taille n*p
 def extract_colors(img_full):#un array de dim n*p et avec q=3ou4 composantes, RGB(*)
     (n,p,q)=np.shape(img_full)
-    if(q!=3):
-        q=3#on enlève la transparence
+    q=3#on enlève la transparence
     return [np.matrix([[img_full[i][j][k] for j in range(p)] for i in range(n)]) for k in range(q)]
 
 
+#pour afficher une image avec seulement une composante R, G ou B
 def one_color(img_full):#idem(*) + conserve les composantes nulles pour l'affichage via plt.imshow
     (n,p,q)=np.shape(img_full)
     if(q!=3):
@@ -20,18 +20,13 @@ def one_color(img_full):#idem(*) + conserve les composantes nulles pour l'affich
 # /!\ les types de retour de cette fonction est bâtard
 
 
-
-
-
 #img une image sous la forme d'un array n*p*3ou4
-def compression_k(img, k):#R,G,B):#, A): #A=np.linalg.svd
+def compression_k(img, k):
     (n,p,Q)=np.shape(img)
     m=min(n,p)
     Q=3
-    #print "Shape : ", A[0]
     A=extract_colors(img)#pour décomposer en usv sur des matrices n*p
     A=[np.linalg.svd(np.matrix(A[q])) for q in range(Q)]
-    #A=[R,G,B]
     for q in range(Q):
         A[q][1][k:]=0#compression au rang k
     for q in range(Q):
@@ -44,6 +39,4 @@ def compression_k(img, k):#R,G,B):#, A): #A=np.linalg.svd
         for j in range(p):
             for q in range(Q):
                 B[i][j][q]=A[q][i,j]
-    print(k)
     return B
-

@@ -4,114 +4,24 @@ import matplotlib as mp
 import matplotlib.pyplot as plt
 from image import *
 
-#img_full=mp.image.imread("img/psy.png")           #       89*66
-img_full=mp.image.imread("img/batman.png")        #width=151*89 =height
-#img_full=mp.image.imread("img/couleurs2.png")     #      230*219
-#img_full=mp.image.imread("img/grey.png")          #      260*322
-#img_full=mp.image.imread("img/peint.png")         #      442*262
-#img_full=mp.image.imread("img/img_takeoff.png")   #      400*300
-#img_full=mp.image.imread("img/earth.png")         #      500*500
-#img_full=mp.image.imread("img/lena.png")          #      512*512
-#img_full=mp.image.imread("img/couleurs.png")      #      664*634
-#img_full=mp.image.imread("img/beatles_summer.png")#     1000*491
-#img_full=mp.image.imread("img/ice_tea.png")       #      940*572
-#img_full=mp.image.imread("img/abbey_road.png")    #     1360*768
-#img_full=mp.image.imread("img/beatles.png")       #     3240*2025~7min30
-
-#print(img_full[0][0])
-
-(n,p,q)=np.shape(img_full)
-m=min(n,p)
-pas=20
-#a=[]#liste des images successives
-#for k in range(1,6):
-#    a.append(compression_k(img_full,k*pas))
-
-
-
-"""
-def gris_1(a):
-    r=np.sqrt(a[0]**2+a[1]**2+a[2]**2)/1.9
-    return [r,r,r]
-
-def gris_2(a):
-    r=np.abs((a[0]+a[1]+a[2])/3.1)
-    return [r,r,r]
+#img_full=mp.image.imread("img/psy.png")           #       89*66    k_max=37 
+#img_full=mp.image.imread("img/batman.png")        #width=151*89 =height  55
+img_full=mp.image.imread("img/couleurs2.png")     #      230*219        111
+#img_full=mp.image.imread("img/grey.png")          #      260*322        143
+#img_full=mp.image.imread("img/peint.png")         #      442*262        164
+#img_full=mp.image.imread("img/img_takeoff.png")   #      400*300        171
+#img_full=mp.image.imread("img/earth.png")         #      500*500        249
+#img_full=mp.image.imread("img/lena.png")          #      512*512        255
+#img_full=mp.image.imread("img/couleurs.png")      #      664*634        324
+#img_full=mp.image.imread("img/beatles_summer.png")#     1000*491        329
+#img_full=mp.image.imread("img/ice_tea.png")       #      940*572        355
+#img_full=mp.image.imread("img/abbey_road.png")    #     1360*768        490
+#img_full=mp.image.imread("img/beatles.png")       #     3240*2025      1245
 
 def traitement(a):
     (n,p,q)=np.shape(a)
-    return [[gris_1(a[i][j])  for j in range(p)] for i in range(n)]
-
-#Pour améliorer les img en couleurs compressées
-def travail1(a):#moyenne sur les 4 voisins
-    (n,p,q)=np.shape(a)
     q=3
     c=0
-    for i in range(1,n-1):
-        for j in range(1,p-1):
-            for k in range(q):
-                a[i,j,k]=(a[i+1,j,k]+a[i-1,j,k]+a[i,j+1,k]+a[i,j-1,k])/4.0
-                c=c+1
-    print(c)
-
-def travail2(a):#moyenne les 8 voisins, uniformément
-    (n,p,q)=np.shape(a)
-    q=3
-    c=0
-    for i in range(1,n-1):
-        for j in range(1,p-1):
-            for k in range(q):
-                moyenne=(a[i+1,j,k]+a[i-1,j,k]+a[i,j+1,k]+a[i,j-1,k])/4.0
-                a[i,j,k]=(4*moyenne+a[i+1,j+1,k]+a[i+1,j-1,k]+a[i-1,j+1,k]+a[i-1,j-1,k])/8.0
-                c=c+1
-    print(" "*10+str(c))
-
-def travail3(a):#rajoute un coeff sqrt(2) pour prendre en compte les 8 voisins
-    (n,p,q)=np.shape(a)
-    q=3
-    c=0
-    for i in range(1,n-1):
-        for j in range(1,p-1):
-            for k in range(q):
-                moyenne=(a[i+1,j,k]+a[i-1,j,k]+a[i,j+1,k]+a[i,j-1,k])/4.0
-                a[i,j,k]=(5.656854*moyenne+a[i+1,j+1,k]+a[i+1,j-1,k]+a[i-1,j+1,k]+a[i-1,j-1,k])/9.656854
-                c=c+1
-    print(" "*20+str(c))
-    
-def travail4(a):
-    (n,p,q)=np.shape(a)
-    q=3
-    c=0
-    coeff=0.1
-    for i in range(1,n-1):
-        for j in range(1,p-1):
-            for k in range(q):
-                t=np.abs(np.linalg.norm(a[i,j])-np.linalg.norm([a[i+1,j],a[i-1,j],a[i,j+1],a[i,j-1]]))
-                a[i,j,k]=(a[i+1,j,k]+a[i-1,j,k]+a[i,j+1,k]+a[i,j-1,k])/4.0
-                c=c+1
-    print(" "*30+str(c))
-
-def travail5(a):#tres bon sur takeoff  BEST
-    (n,p,q)=np.shape(a)
-    q=3
-    c=0
-    coeff=0.05
-    for i in range(0,n):
-        for j in range(0,p):
-            for k in range(q):
-                if(a[i,j,k]<0):
-                    a[i,j,k]=a[i,j,k]%1
-                    c=c+1
-                if(a[i,j,k]>1):
-                    a[i,j,k]=a[i,j,k]%1
-                    c=c+1
-    print(" "*40+str(c))
-"""
-def travail6(a):#tres bon sur takeoff  BEST
-    (n,p,q)=np.shape(a)
-    q=3
-    c=0
-    coeff=0.05
     for i in range(0,n):
         for j in range(0,p):
             for k in range(q):
@@ -121,132 +31,123 @@ def travail6(a):#tres bon sur takeoff  BEST
                 if(a[i,j,k]>1):
                     a[i,j,k]=1
                     c=c+1
-    print(" "*50+str(c))
+    return(c)
 
+def sub_blanc(a,b):#utilise pour afficher la difference en l'image a et la b
+    return np.ones(np.shape(a))-np.abs(a-b)
 
-
-#nn=len(a)
-
-#a1=np.copy(a)
-#a2=np.copy(a)
-#a3=np.copy(a)
-#for k in range(nn):
-    #travail5(a1[k])
-    #travail4(a2[k])
-    #travail6(a3[k])
-
-
-def sub(a,b):
+def sub_noir(a,b):#utilise pour afficher la difference en l'image a et la b
     return np.abs(a-b)
 
 def distance_matrice(a,b):
     (n,p,q)=np.shape(a)
-    s=sub(a,b)
+    s=a-b
     return np.linalg.norm([[np.linalg.norm(s[i,j]) for j in range(p)] for i in range(n)])
 
+def abscisse(n,p):#choisi les valeurs de la compression pour 
+    m=min(n,p)    #un graphe exploitable sans tracer tous les points
+    max=(n*p)/(1+n+p)
+    if(max>100):
+        x=[i for i in range(3,10,1)]
+        for i in range(10,max/10,2):
+            x.append(i)
+        for i in range(max/10+5,int(max/(2.5)),10):
+            x.append(i)
+        for i in range(int(max/(2.5))+5,m/2,15):
+            x.append(i)
+        for i in range(m/2+10,m,30):
+            x.append(i)
+        cond=True
+        i=len(x)-1
+        while(cond):
+            if(x[i]>max):
+                i=i-1
+            else:
+                x=x[:i+1]+[max]+x[i+1:]
+                cond=False
+        x.append(m)
+    else:
+        x=range(1,m+1,1)
+    return x
 
-#print img_full[:][:][0]
-#A=extract_colors(img_full)#pour décomposer en usv sur des matrices n*p
-#A=[np.linalg.svd(np.matrix(A[k])) for k in range(q)]
-max=(n*p)/(1+n+p)
-if(max>100):
-    x=[]
-    for i in range(1,max/10,2):
-        x.append(i)
-    for i in range(max/10+2,max/5,5):
-        x.append(i)
-    for i in range(max/5+5,max,20):
-        x.append(i)
-else:
-    x=range(1,max,1)
-print(x)
-print(len(x))
-distance=[]
-for g in x:
-     a=compression_k(img_full,g)# A#[0],A[1],A[2])
-     travail6(a)
-     d=distance_matrice(img_full,a)
-     distance.append(d)
-y=[np.sqrt(1/float(i)) for i in x]
-z=[np.sqrt(np.sqrt(1/float(i))) for i in x]
-plt.plot(x,distance,'o')
-plt.show()
-plt.plot(y,distance,'o')
-plt.show()
-plt.plot(z,distance,'o')
-plt.show()
+def list_img_compresse(img_full):
+    (n,p,q)=np.shape(img_full)
+    max=(n*p)/(1+n+p)
+    x=abscisse(n,p)
+    print("")
+    print("Nb de compressions : "+str(len(x)))
+    print("Compression au rang k suivant :")
+    print(x)
+    print("")
+    distance=[]
+    L=[]
+    print("Compression au rang k   Nb de composantes R, G ou B modifiées   Distance entre img_k et img :")
+    for g in x:
+        a=compression_k(img_full,g)
+        c=traitement(a)
+        L.append(a)
+        distance.append(distance_matrice(img_full,a))
+        print("  "*6+str(g)+" "*25+str(c)+" "*30+str(int(100*distance[x.index(g)])/100.0))
+    return (L,distance,x,n,p,max)
 
-#for k in range(nn):
-#    print(k+1)
-#    plt.subplot(121)
-#    plt.axis("off")
-#    plt.title("BRUTE")
-#    plt.imshow(a[k],interpolation='nearest')
-#    plt.subplot(122)
-#    plt.axis("off")
-#    plt.title("AVEC CORRECTION")
-#    plt.imshow(a3[k],interpolation='nearest')
-#    plt.show()
-    #plt.subplot(223)
-    #plt.axis("off")
-    #plt.title("AVEC 1")
-    #plt.imshow(a2[k],interpolation='nearest')
-    #plt.subplot(224)
-    #plt.axis("off")
-    #plt.title("AVEC 2")
-    #plt.imshow(a3[k],interpolation='nearest')
-    #plt.show()
-    #plt.subplot(224)
-    #plt.axis("off")
-    #plt.title("AVEC 3")
-    #plt.imshow((a3[k]),interpolation='nearest')
-    #plt.show()
+def graph_compression(img_full):
+    (L,distance,x,n,p,max)=list_img_compresse(img_full)
+    y=[np.sqrt(1/float(i)) for i in x]
+    plt.subplot(121)
+    plt.title("Efficacite de la compression SVD sur une image ")
+    plt.xlabel("rang k de compression")
+    plt.ylabel("distance entre l'originale et la compressee")
+    pos=x.index(max)
+    plt.plot(x,distance,':o',[x[pos]],[distance[pos]],'ro')
+    plt.subplot(122)
+    plt.title("de taille "+str(n)+"x"+str(p)+", donc une compression maximale de "+str(max))
+    plt.xlabel("1/np.sqrt(k)")
+    plt.ylabel("distance entre l'originale et la compressee")
+    plt.plot(y,distance,':o',[y[pos]],[distance[pos]],'ro')
+    plt.show()
 
-
-
-
-
-
-#essai d'animation...
-
-#from time import sleep
-#plt.ion()
-#nb_images = len(a)
-#image = plt.imshow(a[0])
-
-#for k in np.arange(nb_images):
-#    #print("image numero: %i")%i
-#    image.set_data(a[k])
-#    plt.draw()
-#    sleep(0.50)
-
-
-
-
-
+def plot_img_compress_diff(img_full):
+    (L,distance,x,n,p,max)=list_img_compresse(img_full)
+    i=0
+    for img in L:
+        plt.subplot(121)
+        plt.axis("off")
+        plt.title("Image compresse au rang "+str(x[i]))
+        plt.imshow(img,interpolation='nearest')
+        plt.subplot(122)
+        plt.axis("off")#selon moi, on mieux les différence sur un fond noir
+        plt.title("Diff_noire entre img_rang_k et l'img_source")
+        plt.imshow(sub_noir(img,img_full),interpolation='nearest')
+        #plt.subplot(133)
+        #plt.axis("off")
+        #plt.title("Diff_blanche entre img_rang_k et l'img_source")
+        #plt.imshow(sub_blanc(img,img_full),interpolation='nearest')
+        plt.show()
+        i=i+1
 
 #décompose une image en 3 IMAGES : R, G, B
+def aff_composante_img(img_full):
+    img_extract_rgb=extract_colors(img_full)
+    img_extract_rgb=one_color(img_full)
+    plt.subplot(221)
+    plt.axis("off")
+    plt.title("3 COMPOSANTES")
+    plt.imshow(img_full)
+    plt.subplot(222)
+    plt.axis("off")
+    plt.title("RED")
+    plt.imshow(img_extract_rgb[0])
+    plt.subplot(223)
+    plt.axis("off")
+    plt.title("GREEN")
+    plt.imshow(img_extract_rgb[1])
+    plt.subplot(224)
+    plt.axis("off")
+    plt.title("BLUE")
+    plt.imshow(img_extract_rgb[2])
+    plt.show()
 
-#img_extract_rgb=extract_colors(img_full)
-#img_extract_rgb=one_color(img_full)
-#print(np.matrix(img_extract_rgb))
 
-
-#plt.subplot(221)
-#plt.axis("off")
-#plt.title("NORMAL")
-#plt.imshow(img_full)
-#plt.subplot(222)
-#plt.axis("off")
-#plt.title("RED")
-#plt.imshow(img_extract_rgb[0])
-#plt.subplot(223)
-#plt.axis("off")
-#plt.title("GREEN")
-#plt.imshow(img_extract_rgb[1])
-#plt.subplot(224)
-#plt.axis("off")
-#plt.title("BLUE")
-#plt.imshow(img_extract_rgb[2])
-
-#plt.show()
+#graph_compression(img_full)
+#plot_img_compress_diff(img_full)
+#aff_composante_img(img_full)

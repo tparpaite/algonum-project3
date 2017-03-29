@@ -4,7 +4,7 @@ from test import *
 from householder import *
 
 
-def definition(taille_max,valeur_borne,norme_max):#definie les vecteurs usuelles pour tous les test_2
+def definition(taille_max,valeur_borne,norme_max,epsilon):#definie les vecteurs usuelles pour tous les test_2
     n=np.random.randint(2,taille_max+1)
     valeur=np.random.randint(1,valeur_borne+1)
     norme=np.random.randint(1,norme_max+1)
@@ -47,7 +47,7 @@ def test_u_householder_2(nb_test,epsilon):#test aussi definition
     print("avec une erreur maximale de "+str(epsilon)+" :")
     j=0
     for i in range(nb_test):
-        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max)
+        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max,epsilon)
         if((np.linalg.norm(x)-np.linalg.norm(y)<epsilon)\
            and (eg_matrix(H,H.T,epsilon))\
            and (eg_matrix(H*H.T,np.matrix(np.eye(n)),epsilon))\
@@ -83,7 +83,7 @@ def test_mult_col_householder_G_2(nb_test,epsilon):
     print("avec une erreur maximale de "+str(epsilon)+" :")
     j=0
     for i in range(nb_test):
-        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max)
+        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max,epsilon)
         c=np.matrix(np.random.randint(-valeur,valeur,size=(n,1)))
         R=mult_col_householder_G(u,c)
         R_th=H*c
@@ -116,7 +116,7 @@ def test_mult_mat_householder_G_2(nb_test,epsilon):
     print("avec une erreur maximale de "+str(epsilon)+" :")
     j=0
     for i in range(nb_test):
-        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max)
+        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max,epsilon)
         m=np.random.randint(1,taille_max+1) #M n'est pas forcement carre
         M=np.matrix(np.random.randint(-valeur,valeur,size=(n,m)))
         R=mult_mat_householder_G(u,M)
@@ -152,7 +152,7 @@ def test_mult_l_householder_D_2(nb_test,epsilon):
     print("avec une erreur maximale de "+str(epsilon)+" :")
     j=0
     for i in range(nb_test):
-        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max)
+        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max,epsilon)
         c=np.matrix(np.random.randint(-valeur,valeur,size=(1,n)))
         R=mult_l_householder_D(c,u)
         R_th=c*H
@@ -185,7 +185,7 @@ def test_mult_mat_householder_D_2(nb_test,epsilon):
     print("avec une erreur maximale de "+str(epsilon)+" :")
     j=0
     for i in range(nb_test):
-        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max)
+        (x,y,u,H,n,valeur,norme)=definition(taille_max,valeur_borne,norme_max,epsilon)
         m=np.random.randint(1,taille_max+1) #M n'est pas forcement carre
         M=np.matrix(np.random.randint(-valeur,valeur,size=(m,n)))
         R=mult_mat_householder_D(M,u)
