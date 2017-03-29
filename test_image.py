@@ -6,7 +6,7 @@ from image import *
 
 #img_full=mp.image.imread("img/psy.png")           #       89*66    k_max=37 
 #img_full=mp.image.imread("img/batman.png")        #width=151*89 =height  55
-img_full=mp.image.imread("img/couleurs2.png")     #      230*219        111
+#img_full=mp.image.imread("img/couleurs2.png")     #      230*219        111
 #img_full=mp.image.imread("img/grey.png")          #      260*322        143
 #img_full=mp.image.imread("img/peint.png")         #      442*262        164
 #img_full=mp.image.imread("img/img_takeoff.png")   #      400*300        171
@@ -125,6 +125,43 @@ def plot_img_compress_diff(img_full):
         plt.show()
         i=i+1
 
+def aff_img_compressees(img_full):
+    (n,p,q)=np.shape(img_full)
+    max=(n*p)/(1+n+p)
+    L=[5,10,20,50,100]
+    a=[]
+    i=0
+    for k in L:
+        a.append(compression_k(img_full,k))
+        c=traitement(a[i])
+        print(k)
+        i=i+1
+    plt.subplot(231)
+    plt.axis("off")
+    plt.title("Rang de compression k="+str(L[0]))
+    plt.imshow(a[0])
+    plt.subplot(232)
+    plt.axis("off")
+    plt.title("Rang de compression k="+str(L[1]))
+    plt.imshow(a[1])
+    plt.subplot(233)
+    plt.axis("off")
+    plt.title("Rang de compression k="+str(L[2]))
+    plt.imshow(a[2])
+    plt.subplot(234)
+    plt.axis("off")
+    plt.title("Rang de compression k="+str(L[3]))
+    plt.imshow(a[3])
+    plt.subplot(235)
+    plt.axis("off")
+    plt.title("Rang de compression k="+str(L[4]))
+    plt.imshow(a[4])
+    plt.subplot(236)
+    plt.axis("off")
+    plt.title("Image originale "+str((n,p))+", kmax="+str(max))
+    plt.imshow(img_full)
+    plt.show()
+    
 #décompose une image en 3 IMAGES : R, G, B
 def aff_composante_img(img_full):
     img_extract_rgb=extract_colors(img_full)
@@ -150,4 +187,5 @@ def aff_composante_img(img_full):
 
 #graph_compression(img_full)
 #plot_img_compress_diff(img_full)
+#aff_img_compressees(img_full)
 #aff_composante_img(img_full)
