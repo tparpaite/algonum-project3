@@ -18,7 +18,7 @@ from image import *
 #img_full=mp.image.imread("img/abbey_road.png")    #     1360*768        490
 #img_full=mp.image.imread("img/beatles.png")       #     3240*2025      1245
 
-def img_one_color_random(n,p):
+def img_one_color_random(n,p):#img avec pour un pixel : une seule composante != 0
     q=3
     img_full=np.zeros((n,p,q))
     for i in range(n):
@@ -31,7 +31,7 @@ def img_one_color_random(n,p):
     plt.show()
     return img_full
 
-def img_color_fix_random(n,p):
+def img_color_fix_random(n,p):#img avec pour un pixel des composantes a 0 ou 1
     q=3
     img_full=np.zeros((n,p,q))
     for i in range(n):
@@ -44,7 +44,7 @@ def img_color_fix_random(n,p):
     plt.show()
     return img_full
 
-def img_random(n,p):
+def img_random(n,p):#img random
     q=3
     img_full=np.random.rand(n,p,q)
     plt.title("Image aleatoire de dimension "+str((n,p)))
@@ -53,8 +53,8 @@ def img_random(n,p):
     plt.show()
     return img_full
 
-def traitement(a):
-    (n,p,q)=np.shape(a)
+def traitement(a):#garantie que l'on obtient une image : les pixels ont
+    (n,p,q)=np.shape(a)#des composantes entre 0 et 1
     q=3
     c=0
     for i in range(0,n):
@@ -68,13 +68,13 @@ def traitement(a):
                     c=c+1
     return(c)
 
-def sub_blanc(a,b):#utilise pour afficher la difference en l'image a et la b
+def sub_blanc(a,b):#utilise pour afficher la difference entre l'image a et la b
     return np.ones(np.shape(a))-np.abs(a-b)
 
-def sub_noir(a,b):#utilise pour afficher la difference en l'image a et la b
+def sub_noir(a,b):#utilise pour afficher la difference entre l'image a et la b
     return np.abs(a-b)
 
-def distance_matrice(a,b):
+def distance_matrice(a,b):#une distance entre deux matrices (n,p,3)
     (n,p,q)=np.shape(a)
     s=a-b
     return np.linalg.norm([[np.linalg.norm(s[i,j]) for j in range(p)] for i in range(n)])
@@ -105,7 +105,7 @@ def abscisse(n,p):#choisi les valeurs de la compression pour
         x=range(1,m+1,1)
     return x
 
-def list_img_compresse(img_full):
+def list_img_compresse(img_full):#travail récurrent dans les fonctions suivantes
     (n,p,q)=np.shape(img_full)
     max=(n*p)/(1+n+p)
     x=abscisse(n,p)
@@ -125,7 +125,7 @@ def list_img_compresse(img_full):
         print("  "*6+str(g)+" "*25+str(c)+" "*30+str(int(100*distance[x.index(g)])/100.0))
     return (L,distance,x,n,p,max)
 
-def graph_compression(img_full):
+def graph_compression(img_full):#cf titre et axe
     (L,distance,x,n,p,max)=list_img_compresse(img_full)
     y=[np.sqrt(1/float(i)) for i in x]
     plt.subplot(121)
@@ -141,26 +141,26 @@ def graph_compression(img_full):
     plt.plot(y,distance,':o',[y[pos]],[distance[pos]],'ro')
     plt.show()
 
-def plot_img_compress_diff(img_full):
+def plot_img_compress_diff(img_full):#cf titre et axe
     (L,distance,x,n,p,max)=list_img_compresse(img_full)
     i=0
     for img in L:
         plt.subplot(121)
         plt.axis("off")
         plt.title("Image compresse au rang "+str(x[i]))
-        plt.imshow(img,interpolation='nearest')
+        plt.imshow(img)
         plt.subplot(122)
-        plt.axis("off")#selon moi, on mieux les différence sur un fond noir
+        plt.axis("off")#selon moi, on voit mieux les différences sur un fond noir
         plt.title("Diff_noire entre img_rang_k et l'img_source")
         plt.imshow(sub_noir(img,img_full),interpolation='nearest')
         #plt.subplot(133)
-        #plt.axis("off")
+        #plt.axis("off")#que sur un fond blanc
         #plt.title("Diff_blanche entre img_rang_k et l'img_source")
         #plt.imshow(sub_blanc(img,img_full),interpolation='nearest')
         plt.show()
         i=i+1
 
-def aff_img_compressees(img_full):
+def aff_img_compressees(img_full):#cf titre et axe
     (n,p,q)=np.shape(img_full)
     max=(n*p)/(1+n+p)
     compression=[15,10,5,3,1]
@@ -225,9 +225,9 @@ def aff_composante_img(img_full):
     plt.imshow(img_extract_rgb[2])
     plt.show()
 
-#img_full=img_one_color_random(100,100)
-#img_full=img_color_fix_random(100,100)
-#img_full=img_random(200,200)
+#img_full=img_one_color_random(250,250)
+#img_full=img_color_fix_random(250,250)
+#img_full=img_random(250,250)
 
 #graph_compression(img_full)
 #plot_img_compress_diff(img_full)
