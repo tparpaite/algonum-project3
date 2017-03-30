@@ -3,7 +3,7 @@
 import matplotlib as mp
 import matplotlib.pyplot as plt
 from image import *
-
+                                                   #k_max=int(n*p/(1+n+p))
 #img_full=mp.image.imread("img/psy.png")           #       89*66    k_max=37 
 #img_full=mp.image.imread("img/batman.png")        #width=151*89 =height  55
 #img_full=mp.image.imread("img/couleurs2.png")     #      230*219        111
@@ -17,6 +17,41 @@ from image import *
 #img_full=mp.image.imread("img/ice_tea.png")       #      940*572        355
 #img_full=mp.image.imread("img/abbey_road.png")    #     1360*768        490
 #img_full=mp.image.imread("img/beatles.png")       #     3240*2025      1245
+
+def img_one_color_random(n,p):
+    q=3
+    img_full=np.zeros((n,p,q))
+    for i in range(n):
+        for j in range(p):
+            k=np.random.randint(0,3)
+            img_full[i][j][k]=np.random.rand()
+    plt.title("Image aleatoire de dimension "+str((n,p))+", avec deux composantes de couleurs a 0")
+    plt.axis("off")
+    plt.imshow(img_full, interpolation='nearest')
+    plt.show()
+    return img_full
+
+def img_color_fix_random(n,p):
+    q=3
+    img_full=np.zeros((n,p,q))
+    for i in range(n):
+        for j in range(p):
+            for k in range(q):
+                img_full[i][j][k]=np.random.randint(0,2)
+    plt.title("Image aleatoire de dimension "+str((n,p))+", avec des composantes a 0 ou a 1")
+    plt.axis("off")
+    plt.imshow(img_full, interpolation='nearest')
+    plt.show()
+    return img_full
+
+def img_random(n,p):
+    q=3
+    img_full=np.random.rand(n,p,q)
+    plt.title("Image aleatoire de dimension "+str((n,p)))
+    plt.axis("off")
+    plt.imshow(img_full, interpolation='nearest')
+    plt.show()
+    return img_full
 
 def traitement(a):
     (n,p,q)=np.shape(a)
@@ -47,7 +82,7 @@ def distance_matrice(a,b):
 def abscisse(n,p):#choisi les valeurs de la compression pour 
     m=min(n,p)    #un graphe exploitable sans tracer tous les points
     max=(n*p)/(1+n+p)
-    if(max>100):
+    if(max>75):
         x=[i for i in range(3,10,1)]
         for i in range(10,max/10,2):
             x.append(i)
@@ -128,7 +163,8 @@ def plot_img_compress_diff(img_full):
 def aff_img_compressees(img_full):
     (n,p,q)=np.shape(img_full)
     max=(n*p)/(1+n+p)
-    L=[5,10,20,50,100]
+    compression=[15,10,5,3,1]
+    L=[max/i for i in compression]
     a=[]
     i=0
     for k in L:
@@ -138,27 +174,32 @@ def aff_img_compressees(img_full):
         i=i+1
     plt.subplot(231)
     plt.axis("off")
-    plt.title("Rang de compression k="+str(L[0]))
+    plt.title("compression "+str(compression[0])+":1, k="+str(L[0]))
+    #plt.title("Rang de compression k="+str(L[0]))
     plt.imshow(a[0])
     plt.subplot(232)
     plt.axis("off")
-    plt.title("Rang de compression k="+str(L[1]))
+    plt.title("compression "+str(compression[1])+":1, k="+str(L[1]))
+    #plt.title("Rang de compression k="+str(L[1]))
     plt.imshow(a[1])
     plt.subplot(233)
     plt.axis("off")
-    plt.title("Rang de compression k="+str(L[2]))
+    plt.title("compression "+str(compression[2])+":1, k="+str(L[2]))
+    #plt.title("Rang de compression k="+str(L[2]))
     plt.imshow(a[2])
     plt.subplot(234)
     plt.axis("off")
-    plt.title("Rang de compression k="+str(L[3]))
+    plt.title("compression "+str(compression[3])+":1, k="+str(L[3]))
+    #plt.title("Rang de compression k="+str(L[3]))
     plt.imshow(a[3])
     plt.subplot(235)
     plt.axis("off")
-    plt.title("Rang de compression k="+str(L[4]))
+    plt.title("compression "+str(compression[4])+":1, k="+str(L[4]))
+    #plt.title("Rang de compression kmax="+str(L[4]))
     plt.imshow(a[4])
     plt.subplot(236)
     plt.axis("off")
-    plt.title("Image originale "+str((n,p))+", kmax="+str(max))
+    plt.title("Image originale "+str((n,p)))
     plt.imshow(img_full)
     plt.show()
     
@@ -184,6 +225,9 @@ def aff_composante_img(img_full):
     plt.imshow(img_extract_rgb[2])
     plt.show()
 
+#img_full=img_one_color_random(100,100)
+#img_full=img_color_fix_random(100,100)
+#img_full=img_random(200,200)
 
 #graph_compression(img_full)
 #plot_img_compress_diff(img_full)
