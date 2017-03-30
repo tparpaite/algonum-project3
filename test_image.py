@@ -185,7 +185,7 @@ def aff_composante_img(img_full):
     plt.show()
 
 
-graph_compression(img_full)
+#graph_compression(img_full)
 #plot_img_compress_diff(img_full)
 #aff_img_compressees(img_full)
 #aff_composante_img(img_full)
