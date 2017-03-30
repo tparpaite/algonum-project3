@@ -81,7 +81,7 @@ def list_img_compresse(img_full):
     print("")
     distance=[]
     L=[]
-    print("Compression au rang k   Nb de composantes R, G ou B modifiées   Distance entre img_k et img :")
+    print("Compression au rang k   Nb de composantes R, G ou B modifiées   Distance entre img_k et img")
     for g in x:
         a=compression_k(img_full,g)
         c=traitement(a)
@@ -185,7 +185,7 @@ def aff_composante_img(img_full):
     plt.show()
 
 
-#graph_compression(img_full)
+graph_compression(img_full)
 #plot_img_compress_diff(img_full)
 #aff_img_compressees(img_full)
 #aff_composante_img(img_full)
