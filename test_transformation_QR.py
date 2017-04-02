@@ -57,7 +57,8 @@ def logbooks_to_figure(logbook_basic):
     # On ajuste les axes
     axes.set_xlabel("Iteration")
     axes.set_ylabel("Nombre d'elements extradiagonaux non nuls (convergence)")
-    axes.set_xlim([0, 2000])
+    axes.set_xlim([0, 4000])
+    axes.set_ylim([0, 1])
     
     # Creation des courbes
     curve_basic = create_curve(axes, logbook_basic, "b", "Algorithme basique")

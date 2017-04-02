@@ -84,7 +84,7 @@ def bidiagonal_to_diagonal(S):
     while (not(is_diagonal(S))):
         # On ajoute les informations courantes au logbook
         logbook["iteration"].append(ite)
-        logbook["convergence"].append(convergence_indicator(S))
+        logbook["convergence"].append(sum_bidiagonal_sup(S))
 
         # Puis on applique l'algorithme
         (Q1, R1) = np.linalg.qr(np.transpose(S), mode='complete')
